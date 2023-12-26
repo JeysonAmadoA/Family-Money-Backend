@@ -5,7 +5,7 @@ import JeysonAmadoA.FamilyMoney.Dto.Auth.LoginDto;
 import JeysonAmadoA.FamilyMoney.Dto.Auth.RegisterUserDto;
 import JeysonAmadoA.FamilyMoney.Dto.Users.UserDto;
 import JeysonAmadoA.FamilyMoney.Entities.Users.UserEntity;
-import JeysonAmadoA.FamilyMoney.Exceptions.RegisterUserException;
+import JeysonAmadoA.FamilyMoney.Exceptions.Users.RegisterUserException;
 import JeysonAmadoA.FamilyMoney.Mappers.Auth.RegisterUserMapper;
 import JeysonAmadoA.FamilyMoney.Mappers.Users.UserMapper;
 import JeysonAmadoA.FamilyMoney.Repositories.Users.UserRepository;

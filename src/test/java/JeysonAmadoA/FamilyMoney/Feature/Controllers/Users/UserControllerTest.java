@@ -2,8 +2,8 @@ package JeysonAmadoA.FamilyMoney.Feature.Controllers.Users;
 
 import JeysonAmadoA.FamilyMoney.Dto.Users.UpdatePasswordDto;
 import JeysonAmadoA.FamilyMoney.Dto.Users.UserDto;
-import JeysonAmadoA.FamilyMoney.Exceptions.DeleteUserException;
-import JeysonAmadoA.FamilyMoney.Exceptions.UpdateUserException;
+import JeysonAmadoA.FamilyMoney.Exceptions.Users.DeleteUserException;
+import JeysonAmadoA.FamilyMoney.Exceptions.Users.UpdateUserException;
 import JeysonAmadoA.FamilyMoney.Http.Controllers.Users.UserController;
 import JeysonAmadoA.FamilyMoney.Services.Users.UserService;
 import org.junit.jupiter.api.Test;

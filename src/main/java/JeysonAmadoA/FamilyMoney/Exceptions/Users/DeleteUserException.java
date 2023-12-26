@@ -1,4 +1,4 @@
-package JeysonAmadoA.FamilyMoney.Exceptions;
+package JeysonAmadoA.FamilyMoney.Exceptions.Users;
 
 public class DeleteUserException extends Exception{
 

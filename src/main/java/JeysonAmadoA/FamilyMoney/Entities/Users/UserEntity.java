@@ -1,6 +1,7 @@
 package JeysonAmadoA.FamilyMoney.Entities.Users;
 
 import JeysonAmadoA.FamilyMoney.Entities.BaseEntity;
+import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.FamilyGroupEntity;
 import JeysonAmadoA.FamilyMoney.Utilities.Security.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -52,6 +54,12 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @Email(message = "El correo no coincide con el formato esperado")
     @Column(unique = true, nullable = false)
     private String email;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_has_family_groups",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "family_group_id"))
+    private Set<FamilyGroupEntity> familyGroups;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -108,5 +116,4 @@ public class UserEntity extends BaseEntity implements UserDetails {
                 ", roles=" + role +
                 '}';
     }
-
 }

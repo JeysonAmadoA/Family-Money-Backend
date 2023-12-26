@@ -1,11 +1,14 @@
 package JeysonAmadoA.FamilyMoney.Entities.FamilyGroups;
 
 import JeysonAmadoA.FamilyMoney.Entities.BaseEntity;
+import JeysonAmadoA.FamilyMoney.Entities.Users.UserEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.Where;
+
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -23,12 +26,10 @@ public class FamilyGroupEntity extends BaseEntity {
     private String groupName;
 
     @NotNull(message = "Debe ingresar cantidad de miembros")
-    @NotBlank(message = "El campo cantidad de miembros no puede estar vacío")
     @Column(name = "members_quantity", nullable = false)
     private int membersQuantity;
 
     @NotNull(message = "Debe ingresar un tipo de grupo")
-    @NotBlank(message = "El campo tipo de grupo no puede estar vacío")
     @Column(name = "family_group_type_id", nullable = false)
     private Long familyGroupTypeId;
 
@@ -37,8 +38,10 @@ public class FamilyGroupEntity extends BaseEntity {
     private FamilyGroupTypeEntity familyGroupType;
 
     @NotNull(message = "Debe ingresar un apellido")
-    @NotBlank(message = "El campo apellido no puede estar vacío")
-    @Column(name = "family_group_total_money", columnDefinition = "FLOAT DEFAULT 0.0")
+    @Column(name = "family_group_total_money")
     private float familyGroupTotalMoney;
+
+    @ManyToMany(mappedBy = "familyGroups", fetch = FetchType.EAGER)
+    private Set<UserEntity> users;
 
 }

@@ -2,7 +2,7 @@ package JeysonAmadoA.FamilyMoney.Helpers;
 
 import JeysonAmadoA.FamilyMoney.Dto.Auth.RegisterUserDto;
 import JeysonAmadoA.FamilyMoney.Dto.Users.UserDto;
-import JeysonAmadoA.FamilyMoney.Exceptions.RegisterUserException;
+import JeysonAmadoA.FamilyMoney.Exceptions.Users.RegisterUserException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

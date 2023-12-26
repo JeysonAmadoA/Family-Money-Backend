@@ -3,8 +3,8 @@ package JeysonAmadoA.FamilyMoney.Interfaces.Services.Users;
 import JeysonAmadoA.FamilyMoney.Dto.Users.UpdatePasswordDto;
 import JeysonAmadoA.FamilyMoney.Dto.Users.UserDto;
 import JeysonAmadoA.FamilyMoney.Entities.Users.UserEntity;
-import JeysonAmadoA.FamilyMoney.Exceptions.DeleteUserException;
-import JeysonAmadoA.FamilyMoney.Exceptions.UpdateUserException;
+import JeysonAmadoA.FamilyMoney.Exceptions.Users.DeleteUserException;
+import JeysonAmadoA.FamilyMoney.Exceptions.Users.UpdateUserException;
 
 import java.util.List;
 
