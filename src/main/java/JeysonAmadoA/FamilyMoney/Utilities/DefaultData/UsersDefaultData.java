@@ -15,7 +15,6 @@ public class UsersDefaultData implements CommandLineRunner {
 
     private final UserRepository userRepo;
 
-
     @Autowired
     public UsersDefaultData(UserRepository userRepo) {
         this.userRepo = userRepo;
@@ -33,6 +32,16 @@ public class UsersDefaultData implements CommandLineRunner {
 
         userAdmin.commitCreate();
 
+        UserEntity userCustomer = UserEntity.builder()
+                .name("Satoru").lastName("Gojo")
+                .email("Satoru@Gojo.com").birthDay(LocalDate.of(1990,7,14))
+                .password((new BCryptPasswordEncoder()).encode("Geto123"))
+                .role(Role.CUSTOMER)
+                .build();
+
+        userCustomer.commitCreate();
+
         userRepo.save(userAdmin);
+        userRepo.save(userCustomer);
     }
 }

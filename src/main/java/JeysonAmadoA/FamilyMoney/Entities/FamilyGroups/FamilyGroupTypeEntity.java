@@ -13,8 +13,7 @@ import org.hibernate.annotations.Where;
 @Builder
 @Where(clause = "deleted_at is NULL")
 @Table(name = "family_group_types")
-@Getter
-@Setter
+@Data
 public class FamilyGroupTypeEntity extends BaseEntity {
 
     @Column

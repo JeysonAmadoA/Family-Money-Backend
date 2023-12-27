@@ -70,8 +70,10 @@ public class FamilyGroupRepositoryTest {
     @Rollback(value = false)
     public void updateFamilyGroupTest() {
         FamilyGroupEntity groupFound = familyGroupRepo.findById(1L).orElse(null);
+        FamilyGroupTypeEntity otherType = familyGroupTypeRepo.save(FamilyGroupTypeEntity.builder().name("Type diferent").build());
         assertNotNull(groupFound);
         groupFound.setMembersQuantity(4);
+        groupFound.setFamilyGroupType(otherType);
 
         FamilyGroupEntity groupUpdated = familyGroupRepo.save(groupFound);
         assertNotNull(groupUpdated);

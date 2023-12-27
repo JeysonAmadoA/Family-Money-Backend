@@ -8,6 +8,8 @@ public enum Permission {
 
     UPDATE_USERS,
 
-    DELETE_USERS
+    DELETE_USERS,
+
+    FAMILY_GROUPS_MANAGEMENT,
 
 }

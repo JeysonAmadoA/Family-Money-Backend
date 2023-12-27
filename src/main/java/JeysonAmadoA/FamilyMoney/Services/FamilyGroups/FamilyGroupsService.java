@@ -1,0 +1,129 @@
+package JeysonAmadoA.FamilyMoney.Services.FamilyGroups;
+
+import JeysonAmadoA.FamilyMoney.Dto.FamilyGroups.FamilyGroupDto;
+import JeysonAmadoA.FamilyMoney.Dto.FamilyGroups.FamilyGroupUpsertDto;
+import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.FamilyGroupEntity;
+import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.FamilyGroupTypeEntity;
+import JeysonAmadoA.FamilyMoney.Entities.Users.UserEntity;
+import JeysonAmadoA.FamilyMoney.Exceptions.General.DeleteException;
+import JeysonAmadoA.FamilyMoney.Exceptions.General.GetException;
+import JeysonAmadoA.FamilyMoney.Exceptions.General.StoreException;
+import JeysonAmadoA.FamilyMoney.Exceptions.General.UpdateException;
+import JeysonAmadoA.FamilyMoney.Interfaces.Services.FamilyGroups.FamilyGroupsServiceInterface;
+import JeysonAmadoA.FamilyMoney.Mappers.FamilyGroups.FamilyGroupMapper;
+import JeysonAmadoA.FamilyMoney.Mappers.FamilyGroups.FamilyGroupUpsertMapper;
+import JeysonAmadoA.FamilyMoney.Repositories.FamilyGroups.FamilyGroupRepository;
+import JeysonAmadoA.FamilyMoney.Repositories.Users.UserRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static JeysonAmadoA.FamilyMoney.Helpers.AuthHelper.getUserWhoActingId;
+
+@Service
+public class FamilyGroupsService implements FamilyGroupsServiceInterface {
+
+    private final UserRepository userRepo;
+
+    private final FamilyGroupRepository familyGroupRepo;
+
+    private final FamilyGroupMapper familyGroupMapper;
+
+    private final FamilyGroupUpsertMapper upsertMapper;
+
+    public FamilyGroupsService(UserRepository userRepo,
+                               FamilyGroupRepository familyGroupRepo,
+                               FamilyGroupMapper familyGroupMapper,
+                               FamilyGroupUpsertMapper upsertMapper) {
+        this.userRepo = userRepo;
+        this.familyGroupRepo = familyGroupRepo;
+        this.familyGroupMapper = familyGroupMapper;
+        this.upsertMapper = upsertMapper;
+    }
+
+    @Transactional
+    @Override
+    public FamilyGroupDto storeFamilyGroup(FamilyGroupUpsertDto familyGroupDto) throws StoreException {
+        try {
+            UserEntity actualUser = userRepo.findById(Objects.requireNonNull(getUserWhoActingId()))
+                    .orElseThrow(() -> new Exception("Usuario no encontrado"));
+
+            FamilyGroupEntity newFamilyGroup = upsertMapper.toEntity(familyGroupDto);
+            newFamilyGroup.commitCreate(actualUser.getId());
+            FamilyGroupEntity storedGroup = familyGroupRepo.save(newFamilyGroup);
+            storeUserHasGroupFamilies(actualUser, storedGroup);
+            return familyGroupMapper.toDto(storedGroup);
+        } catch (Exception e){
+            throw new StoreException(e.getMessage());
+        }
+    }
+
+
+    @Override
+    public List<FamilyGroupDto> getFamilyGroups() throws GetException {
+        try {
+
+            UserEntity actualUser = userRepo.findById(Objects.requireNonNull(getUserWhoActingId()))
+                    .orElseThrow(() -> new Exception("Usuario no encontrado"));
+
+            Set<FamilyGroupEntity> userGroups = actualUser.getFamilyGroups();
+
+            if (userGroups != null){
+                return actualUser.getFamilyGroups()
+                        .stream().map(familyGroupMapper::toDto)
+                        .collect(Collectors.toList());
+            } else return null;
+
+        } catch (Exception e){
+            throw new GetException(e.getMessage());
+        }
+    }
+
+    @Transactional
+    @Override
+    public FamilyGroupDto updateFamilyGroup(Long id, FamilyGroupUpsertDto familyGroupDto) throws UpdateException {
+        try {
+            FamilyGroupEntity foundGroup = familyGroupRepo.findById(id).orElse(null);
+            if (foundGroup != null){
+                FamilyGroupEntity familyGroup = upsertMapper.update(familyGroupDto, foundGroup);
+                familyGroup.commitUpdate(getUserWhoActingId());
+                FamilyGroupEntity updatedFamilyGroup = familyGroupRepo.save(familyGroup);
+                return familyGroupMapper.toDto(updatedFamilyGroup);
+            } else return null;
+        } catch (Exception e){
+            throw new UpdateException(e.getMessage());
+        }
+    }
+
+    @Transactional
+    @Override
+    public boolean deleteFamilyGroup(Long id) throws DeleteException {
+        try {
+            FamilyGroupEntity foundGroup = familyGroupRepo.findById(id).orElse(null);
+            if (foundGroup != null){
+                foundGroup.commitDelete(getUserWhoActingId());
+                familyGroupRepo.save(foundGroup);
+                return true;
+            } else return false;
+        } catch (Exception e){
+            throw new DeleteException(e.getMessage());
+        }
+    }
+
+
+    private void storeUserHasGroupFamilies(UserEntity user, FamilyGroupEntity familyGroup){
+        Set<FamilyGroupEntity> groupEntities = user.getFamilyGroups();
+        if (groupEntities == null){
+            groupEntities = new HashSet<>();
+        }
+        groupEntities.add(familyGroup);
+        user.setFamilyGroups(groupEntities);
+        user.commitUpdate(getUserWhoActingId());
+        userRepo.save(user);
+    }
+}

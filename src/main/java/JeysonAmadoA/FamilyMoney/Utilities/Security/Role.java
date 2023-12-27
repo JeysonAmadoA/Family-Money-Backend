@@ -11,14 +11,16 @@ public enum Role {
                     Permission.UPDATE_USERS,
                     Permission.DELETE_USERS,
                     Permission.GET_ALL_USERS,
-                    Permission.GET_ONE_USER
+                    Permission.GET_ONE_USER,
+                    Permission.FAMILY_GROUPS_MANAGEMENT
             )
     ),
 
     CUSTOMER(
             Arrays.asList(
                     Permission.UPDATE_USERS,
-                    Permission.GET_ONE_USER
+                    Permission.GET_ONE_USER,
+                    Permission.FAMILY_GROUPS_MANAGEMENT
             )
     );
 
