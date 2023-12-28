@@ -1,9 +1,9 @@
 package JeysonAmadoA.FamilyMoney.Repositories.FamilyGroups;
 
-import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.FamilyGroupExpensesEntity;
+import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.BudgetEntity;
 import JeysonAmadoA.FamilyMoney.Repositories.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FamilyGroupExpensesRepository extends BaseRepository<FamilyGroupExpensesEntity, Long> {
+public interface BudgetRepository extends BaseRepository<BudgetEntity, Long> {
 }

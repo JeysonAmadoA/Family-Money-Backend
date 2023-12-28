@@ -1,9 +1,9 @@
-package JeysonAmadoA.FamilyMoney.Dto.FamilyGroups;
+package JeysonAmadoA.FamilyMoney.Dto.Expenses;
 
 import lombok.Data;
 
 @Data
-public class ExpenseDto {
+public class ExpenseUpsertDto {
 
     private String expenseName;
 

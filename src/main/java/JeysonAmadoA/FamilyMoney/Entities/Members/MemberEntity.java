@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
+import java.math.BigDecimal;
+
 
 @Entity
 @AllArgsConstructor
@@ -35,4 +37,5 @@ public class MemberEntity extends BaseEntity {
 
     @Column(name = "economic_contribution")
     private float economicContribution;
+
 }

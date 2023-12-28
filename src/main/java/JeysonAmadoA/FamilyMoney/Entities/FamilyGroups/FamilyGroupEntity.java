@@ -1,6 +1,7 @@
 package JeysonAmadoA.FamilyMoney.Entities.FamilyGroups;
 
 import JeysonAmadoA.FamilyMoney.Entities.BaseEntity;
+import JeysonAmadoA.FamilyMoney.Entities.Members.MemberEntity;
 import JeysonAmadoA.FamilyMoney.Entities.Users.UserEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -8,6 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -43,5 +46,8 @@ public class FamilyGroupEntity extends BaseEntity {
 
     @ManyToMany(mappedBy = "familyGroups", fetch = FetchType.EAGER)
     private Set<UserEntity> users;
+
+    @OneToMany(mappedBy = "familyGroup")
+    private Set<MemberEntity> members;
 
 }

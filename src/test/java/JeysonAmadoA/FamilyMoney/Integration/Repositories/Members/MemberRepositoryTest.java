@@ -40,15 +40,23 @@ public class MemberRepositoryTest {
     public void saveMemberTest() {
         FamilyGroupEntity familyGroup = (FamilyGroupEntity) familyGroupFactory.create();
 
-        MemberEntity member = MemberEntity.builder()
+        MemberEntity memberOne = MemberEntity.builder()
                 .memberName("Hugo").memberRol("Hijo")
                 .familyGroupId(familyGroup.getId()).economicContribution(2800000)
                 .build();
 
-        MemberEntity memberSaved = memberRepo.save(member);
+        MemberEntity memberTwo = MemberEntity.builder()
+                .memberName("Hugo").memberRol("Hijo")
+                .familyGroupId(familyGroup.getId()).economicContribution(2800000)
+                .build();
 
-        assertNotNull(memberSaved);
-        assertThat(memberSaved.getId()).isGreaterThanOrEqualTo(1L);
+        MemberEntity memberSavedOne = memberRepo.save(memberOne);
+        MemberEntity memberSavedTwo = memberRepo.save(memberTwo);
+
+        assertNotNull(memberSavedOne);
+        assertThat(memberSavedOne.getId()).isGreaterThanOrEqualTo(1L);
+        assertNotNull(memberSavedTwo);
+        assertThat(memberSavedTwo.getId()).isGreaterThanOrEqualTo(1L);
     }
 
     @Test
@@ -63,7 +71,7 @@ public class MemberRepositoryTest {
     @Order(3)
     public void findAllMembersTest() {
         List<MemberEntity> members = memberRepo.findAll();
-        assertThat(members.size()).isGreaterThan(0);
+        assertThat(members.size()).isGreaterThan(1);
     }
 
     @Test

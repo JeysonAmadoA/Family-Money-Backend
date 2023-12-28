@@ -1,10 +1,10 @@
 package JeysonAmadoA.FamilyMoney.Integration.Repositories.FamilyGroups;
 
-import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.FamilyGroupBudgetEntity;
+import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.BudgetEntity;
 import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.PeriodEntity;
 import JeysonAmadoA.FamilyMoney.Factories.FamilyGroups.FamilyGroupFactory;
 import JeysonAmadoA.FamilyMoney.Factories.FamilyGroups.PeriodFactory;
-import JeysonAmadoA.FamilyMoney.Repositories.FamilyGroups.FamilyGroupBudgetRepository;
+import JeysonAmadoA.FamilyMoney.Repositories.FamilyGroups.BudgetRepository;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -23,14 +23,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Import({PeriodFactory.class, FamilyGroupFactory.class})
-public class FamilyGroupBudgetRepositoryTest {
+public class BudgetRepositoryTest {
 
-    private final FamilyGroupBudgetRepository budgetRepo;
+    private final BudgetRepository budgetRepo;
 
     private final PeriodFactory periodFactory;
 
     @Autowired
-    public FamilyGroupBudgetRepositoryTest(FamilyGroupBudgetRepository budgetRepo, PeriodFactory periodFactory) {
+    public BudgetRepositoryTest(BudgetRepository budgetRepo, PeriodFactory periodFactory) {
         this.budgetRepo = budgetRepo;
         this.periodFactory = periodFactory;
     }
@@ -42,11 +42,11 @@ public class FamilyGroupBudgetRepositoryTest {
         PeriodEntity period = (PeriodEntity) periodFactory.create();
 
 
-        FamilyGroupBudgetEntity budget = FamilyGroupBudgetEntity
+        BudgetEntity budget = BudgetEntity
                 .builder().budgetName("Gastos").percentage(60)
                 .category("Prioritarios").periodId(period.getId()).build();
 
-        FamilyGroupBudgetEntity budgetSaved = budgetRepo.save(budget);
+        BudgetEntity budgetSaved = budgetRepo.save(budget);
 
         assertNotNull(budgetSaved);
         assertThat(budgetSaved.getId()).isGreaterThanOrEqualTo(1L);
@@ -55,7 +55,7 @@ public class FamilyGroupBudgetRepositoryTest {
     @Test
     @Order(2)
     public void findByIdBudgetTest() {
-        FamilyGroupBudgetEntity budgetFound = budgetRepo.findById(1L).orElse(null);
+        BudgetEntity budgetFound = budgetRepo.findById(1L).orElse(null);
         assertNotNull(budgetFound);
         assertEquals(1L ,budgetFound.getId());
     }
@@ -63,7 +63,7 @@ public class FamilyGroupBudgetRepositoryTest {
     @Test
     @Order(3)
     public void findAllBudgetsTest() {
-        List<FamilyGroupBudgetEntity> periods = budgetRepo.findAll();
+        List<BudgetEntity> periods = budgetRepo.findAll();
         assertThat(periods.size()).isGreaterThan(0);
     }
 
@@ -71,11 +71,11 @@ public class FamilyGroupBudgetRepositoryTest {
     @Order(4)
     @Rollback(value = false)
     public void updateBudgetTest() {
-        FamilyGroupBudgetEntity budgetFound = budgetRepo.findById(1L).orElse(null);
+        BudgetEntity budgetFound = budgetRepo.findById(1L).orElse(null);
         assertNotNull(budgetFound);
         budgetFound.setPercentage(70);
 
-        FamilyGroupBudgetEntity budgetUpdated = budgetRepo.save(budgetFound);
+        BudgetEntity budgetUpdated = budgetRepo.save(budgetFound);
         assertNotNull(budgetUpdated);
         assertEquals(1L ,budgetUpdated.getId());
         assertEquals(70, budgetUpdated.getPercentage());

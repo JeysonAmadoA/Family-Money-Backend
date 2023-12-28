@@ -1,10 +1,10 @@
 package JeysonAmadoA.FamilyMoney.Integration.Repositories.FamilyGroups;
 
-import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.FamilyGroupExpensesEntity;
+import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.ExpenseEntity;
 import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.PeriodEntity;
 import JeysonAmadoA.FamilyMoney.Factories.FamilyGroups.FamilyGroupFactory;
 import JeysonAmadoA.FamilyMoney.Factories.FamilyGroups.PeriodFactory;
-import JeysonAmadoA.FamilyMoney.Repositories.FamilyGroups.FamilyGroupExpensesRepository;
+import JeysonAmadoA.FamilyMoney.Repositories.FamilyGroups.ExpenseRepository;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -23,14 +23,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Import({PeriodFactory.class, FamilyGroupFactory.class})
-public class FamilyGroupExpensesRepositoryTest {
+public class ExpenseRepositoryTest {
 
-    private final FamilyGroupExpensesRepository expensesRepo;
+    private final ExpenseRepository expensesRepo;
 
     private final PeriodFactory periodFactory;
 
     @Autowired
-    public FamilyGroupExpensesRepositoryTest(FamilyGroupExpensesRepository expensesRepo, PeriodFactory periodFactory) {
+    public ExpenseRepositoryTest(ExpenseRepository expensesRepo, PeriodFactory periodFactory) {
         this.expensesRepo = expensesRepo;
         this.periodFactory = periodFactory;
     }
@@ -42,11 +42,11 @@ public class FamilyGroupExpensesRepositoryTest {
         PeriodEntity period = (PeriodEntity) periodFactory.create();
 
 
-        FamilyGroupExpensesEntity expense = FamilyGroupExpensesEntity
+        ExpenseEntity expense = ExpenseEntity
                 .builder().expenseName("Gastos").expense(60000)
                 .category("Comida").periodId(period.getId()).build();
 
-        FamilyGroupExpensesEntity expenseSaved = expensesRepo.save(expense);
+        ExpenseEntity expenseSaved = expensesRepo.save(expense);
 
         assertNotNull(expenseSaved);
         assertThat(expenseSaved.getId()).isGreaterThanOrEqualTo(1L);
@@ -55,7 +55,7 @@ public class FamilyGroupExpensesRepositoryTest {
     @Test
     @Order(2)
     public void findByIdExpenseTest() {
-        FamilyGroupExpensesEntity expenseFound = expensesRepo.findById(1L).orElse(null);
+        ExpenseEntity expenseFound = expensesRepo.findById(1L).orElse(null);
         assertNotNull(expenseFound);
         assertEquals(1L ,expenseFound.getId());
     }
@@ -63,7 +63,7 @@ public class FamilyGroupExpensesRepositoryTest {
     @Test
     @Order(3)
     public void findAllExpensesTest() {
-        List<FamilyGroupExpensesEntity> periods = expensesRepo.findAll();
+        List<ExpenseEntity> periods = expensesRepo.findAll();
         assertThat(periods.size()).isGreaterThan(0);
     }
 
@@ -71,11 +71,11 @@ public class FamilyGroupExpensesRepositoryTest {
     @Order(4)
     @Rollback(value = false)
     public void updateExpenseTest() {
-        FamilyGroupExpensesEntity expenseFound = expensesRepo.findById(1L).orElse(null);
+        ExpenseEntity expenseFound = expensesRepo.findById(1L).orElse(null);
         assertNotNull(expenseFound);
         expenseFound.setExpense(150000);
 
-        FamilyGroupExpensesEntity expenseUpdated = expensesRepo.save(expenseFound);
+        ExpenseEntity expenseUpdated = expensesRepo.save(expenseFound);
         assertNotNull(expenseUpdated);
         assertEquals(1L ,expenseUpdated.getId());
         assertEquals(150000, expenseUpdated.getExpense());

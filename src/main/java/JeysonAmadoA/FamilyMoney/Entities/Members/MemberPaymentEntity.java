@@ -1,10 +1,9 @@
 package JeysonAmadoA.FamilyMoney.Entities.Members;
 
 import JeysonAmadoA.FamilyMoney.Entities.BaseEntity;
-import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.FamilyGroupBudgetEntity;
-import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.FamilyGroupExpensesEntity;
+import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.BudgetEntity;
+import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.ExpenseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.Where;
@@ -30,18 +29,21 @@ public class MemberPaymentEntity extends BaseEntity {
     @Column(nullable = false)
     private float amount;
 
+    @Column
+    private String observations;
+
     @Column(name = "expense_id")
     private Long expenseId;
 
     @ManyToOne
     @JoinColumn(name = "expense_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private FamilyGroupExpensesEntity expense;
+    private ExpenseEntity expense;
 
     @Column(name = "budget_id")
     private Long budgetId;
 
     @ManyToOne
     @JoinColumn(name = "budget_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private FamilyGroupBudgetEntity budget;
+    private BudgetEntity budget;
 
 }

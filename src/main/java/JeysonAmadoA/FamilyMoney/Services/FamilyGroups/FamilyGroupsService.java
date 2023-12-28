@@ -2,8 +2,8 @@ package JeysonAmadoA.FamilyMoney.Services.FamilyGroups;
 
 import JeysonAmadoA.FamilyMoney.Dto.FamilyGroups.FamilyGroupDto;
 import JeysonAmadoA.FamilyMoney.Dto.FamilyGroups.FamilyGroupUpsertDto;
+import JeysonAmadoA.FamilyMoney.Dto.Members.MemberDto;
 import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.FamilyGroupEntity;
-import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.FamilyGroupTypeEntity;
 import JeysonAmadoA.FamilyMoney.Entities.Users.UserEntity;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.DeleteException;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.GetException;
@@ -12,8 +12,10 @@ import JeysonAmadoA.FamilyMoney.Exceptions.General.UpdateException;
 import JeysonAmadoA.FamilyMoney.Interfaces.Services.FamilyGroups.FamilyGroupsServiceInterface;
 import JeysonAmadoA.FamilyMoney.Mappers.FamilyGroups.FamilyGroupMapper;
 import JeysonAmadoA.FamilyMoney.Mappers.FamilyGroups.FamilyGroupUpsertMapper;
+import JeysonAmadoA.FamilyMoney.Mappers.Members.MemberMapper;
 import JeysonAmadoA.FamilyMoney.Repositories.FamilyGroups.FamilyGroupRepository;
 import JeysonAmadoA.FamilyMoney.Repositories.Users.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -63,11 +65,29 @@ public class FamilyGroupsService implements FamilyGroupsServiceInterface {
         }
     }
 
+    private void storeUserHasGroupFamilies(UserEntity user, FamilyGroupEntity familyGroup){
+        Set<FamilyGroupEntity> groupEntities = user.getFamilyGroups();
+        if (groupEntities == null) groupEntities = new HashSet<>();
+
+        groupEntities.add(familyGroup);
+        user.setFamilyGroups(groupEntities);
+        user.commitUpdate(getUserWhoActingId());
+        userRepo.save(user);
+    }
+
+    @Override
+    public FamilyGroupDto getById(Long id) throws GetException {
+        try {
+            FamilyGroupEntity foundGroup = familyGroupRepo.findById(id).orElse(null);
+            return foundGroup == null ? null : familyGroupMapper.toDto(foundGroup);
+        } catch (Exception e){
+            throw new GetException(e.getMessage());
+        }
+    }
 
     @Override
     public List<FamilyGroupDto> getFamilyGroups() throws GetException {
         try {
-
             UserEntity actualUser = userRepo.findById(Objects.requireNonNull(getUserWhoActingId()))
                     .orElseThrow(() -> new Exception("Usuario no encontrado"));
 
@@ -78,6 +98,22 @@ public class FamilyGroupsService implements FamilyGroupsServiceInterface {
                         .stream().map(familyGroupMapper::toDto)
                         .collect(Collectors.toList());
             } else return null;
+
+        } catch (Exception e){
+            throw new GetException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<MemberDto> getMembers(Long familyGroupId) throws GetException {
+        try {
+            FamilyGroupEntity familyGroup = familyGroupRepo.findById(familyGroupId)
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontró el grupo familiar"));
+
+            MemberMapper memberMapper = new MemberMapper();
+            return familyGroup.getMembers().stream()
+                    .map(memberMapper::toDto)
+                    .collect(Collectors.toList());
 
         } catch (Exception e){
             throw new GetException(e.getMessage());
@@ -115,15 +151,8 @@ public class FamilyGroupsService implements FamilyGroupsServiceInterface {
         }
     }
 
-
-    private void storeUserHasGroupFamilies(UserEntity user, FamilyGroupEntity familyGroup){
-        Set<FamilyGroupEntity> groupEntities = user.getFamilyGroups();
-        if (groupEntities == null){
-            groupEntities = new HashSet<>();
-        }
-        groupEntities.add(familyGroup);
-        user.setFamilyGroups(groupEntities);
-        user.commitUpdate(getUserWhoActingId());
-        userRepo.save(user);
+    @Override
+    public FamilyGroupEntity filterById(Long id) {
+        return familyGroupRepo.findById(id).orElse(null);
     }
 }

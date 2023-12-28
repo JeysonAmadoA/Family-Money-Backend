@@ -1,11 +1,11 @@
-package JeysonAmadoA.FamilyMoney.Dto.FamilyGroups;
+package JeysonAmadoA.FamilyMoney.Dto.Periods;
 
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
-public class PeriodDto {
+public class PeriodUpsertDto {
 
     private String periodName;
 

@@ -2,6 +2,7 @@ package JeysonAmadoA.FamilyMoney.Http.Controllers.FamilyGroups;
 
 import JeysonAmadoA.FamilyMoney.Dto.FamilyGroups.FamilyGroupDto;
 import JeysonAmadoA.FamilyMoney.Dto.FamilyGroups.FamilyGroupUpsertDto;
+import JeysonAmadoA.FamilyMoney.Dto.Members.MemberDto;
 import JeysonAmadoA.FamilyMoney.Interfaces.Services.FamilyGroups.FamilyGroupsServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,17 @@ public class FamilyGroupController {
             return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
         }
     }
+
+    @GetMapping("/{groupId}/members")
+    public ResponseEntity<?> getFamilyGroupMembers(@PathVariable Long groupId){
+        try {
+            List<MemberDto> members = familyGroupsService.getMembers(groupId);
+            return ResponseEntity.status(HttpStatus.OK).body(members);
+        } catch (Exception exception) {
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
+        }
+    }
+
 
     @PatchMapping("update/{groupId}")
     public ResponseEntity<?> update(@PathVariable Long groupId, @RequestBody FamilyGroupUpsertDto familyGroupDto){

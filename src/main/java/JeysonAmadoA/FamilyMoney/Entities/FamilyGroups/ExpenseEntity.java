@@ -2,7 +2,6 @@ package JeysonAmadoA.FamilyMoney.Entities.FamilyGroups;
 
 import JeysonAmadoA.FamilyMoney.Entities.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.Where;
@@ -12,10 +11,10 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @Builder
 @Where(clause = "deleted_at is NULL")
-@Table(name = "family_group_expenses")
+@Table(name = "expenses")
 @Getter
 @Setter
-public class FamilyGroupExpensesEntity extends BaseEntity {
+public class ExpenseEntity extends BaseEntity {
 
     @Column(name = "expense_name")
     private String expenseName;

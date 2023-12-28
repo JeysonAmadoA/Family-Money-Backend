@@ -21,14 +21,14 @@ public class FamilyGroupUpsertMapper extends BaseMapper<FamilyGroupUpsertDto, Fa
     }
 
     public FamilyGroupEntity update(FamilyGroupUpsertDto familyGroupDto, FamilyGroupEntity familyGroupEntity) throws GetException {
-        updateFieldIfNotNull(familyGroupDto.getGroupName(), familyGroupEntity::setGroupName);
         updateFieldIfNumberNotZero(familyGroupDto.getMembersQuantity(), familyGroupEntity::setMembersQuantity);
+        updateFieldIfNumberNotZero(familyGroupDto.getFamilyGroupTotalMoney(), familyGroupEntity::setFamilyGroupTotalMoney);
+        updateFieldIfNotNull(familyGroupDto.getGroupName(), familyGroupEntity::setGroupName);
         updateFieldIfNotNull(familyGroupDto.getFamilyGroupTypeId(), id -> {
             familyGroupEntity.setFamilyGroupType(null);
             familyGroupEntity.setFamilyGroupTypeId(id);
             familyGroupEntity.setFamilyGroupType(typeService.filterById(id));
         });
-        updateFieldIfNumberNotZero(familyGroupDto.getFamilyGroupTotalMoney(), familyGroupEntity::setFamilyGroupTotalMoney);
 
         return familyGroupEntity;
     }

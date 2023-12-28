@@ -21,4 +21,5 @@ public abstract class BaseMapper<D, E> {
     public E toEntity(D dto) {
         return modelMapper.map(dto, entityClass);
     }
+
 }

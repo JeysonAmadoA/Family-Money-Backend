@@ -1,6 +1,6 @@
 package JeysonAmadoA.FamilyMoney.Integration.Repositories.Members;
 
-import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.FamilyGroupBudgetEntity;
+import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.BudgetEntity;
 import JeysonAmadoA.FamilyMoney.Entities.Members.MemberEntity;
 import JeysonAmadoA.FamilyMoney.Entities.Members.MemberPaymentEntity;
 import JeysonAmadoA.FamilyMoney.Factories.FamilyGroups.FamilyGroupBudgetFactory;
@@ -48,7 +48,7 @@ public class MemberPaymentRepositoryTest {
     @Rollback(value = false)
     public void saveMemberPaymentTest() {
         MemberEntity member = (MemberEntity) memberFactory.create();
-        FamilyGroupBudgetEntity budget = (FamilyGroupBudgetEntity) budgetFactory.create();
+        BudgetEntity budget = (BudgetEntity) budgetFactory.create();
 
         MemberPaymentEntity memberPayment = MemberPaymentEntity
                 .builder().memberId(member.getId()).budgetId(budget.getId())

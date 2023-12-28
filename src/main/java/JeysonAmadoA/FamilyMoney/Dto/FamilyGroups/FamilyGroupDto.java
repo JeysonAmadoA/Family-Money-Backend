@@ -2,6 +2,8 @@ package JeysonAmadoA.FamilyMoney.Dto.FamilyGroups;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class FamilyGroupDto {
 
