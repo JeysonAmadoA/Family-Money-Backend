@@ -4,6 +4,7 @@ import JeysonAmadoA.FamilyMoney.Utilities.Security.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -41,6 +42,7 @@ public class SecurityConfig {
                 .headers(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests( auth -> {
                     auth.requestMatchers(antMatcher("/auth/*") ).permitAll();
+                    auth.requestMatchers(antMatcher(HttpMethod.OPTIONS, "/**")).permitAll();
                     auth.requestMatchers(antMatcher("/h2-console/*")).permitAll();
                     auth.requestMatchers(antMatcher( "/users")).hasAuthority(Permission.GET_ALL_USERS.name());
                     auth.requestMatchers(antMatcher( "/users/{id}")).hasAuthority(Permission.GET_ONE_USER.name());
