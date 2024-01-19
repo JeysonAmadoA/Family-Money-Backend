@@ -12,6 +12,7 @@ import JeysonAmadoA.FamilyMoney.Mappers.Users.UserMapper;
 import JeysonAmadoA.FamilyMoney.Repositories.Users.UserRepository;
 import JeysonAmadoA.FamilyMoney.Services.Security.JWTService;
 import JeysonAmadoA.FamilyMoney.Utilities.Security.Role;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,10 @@ import java.util.HashMap;
 
 @Service
 public class AuthService implements AuthServiceInterface {
+
+
+    @Getter
+    private JwtAuthenticationDto jwtAuthenticationDto;
 
 
     private final RegisterUserMapper registerUserMapper;
@@ -62,20 +67,27 @@ public class AuthService implements AuthServiceInterface {
         return this.userMapper.toDto(userRegistered);
     }
 
-    public JwtAuthenticationDto loginUser(LoginDto loginDto){
+    public UserDto loginUser(LoginDto loginDto){
+        authenticateUser(loginDto);
+        UserEntity user = this.userRepo.findByEmail(loginDto.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
+        setJwtAuthenticationDto(user);
+        return userMapper.toDto(user);
+    }
+
+    private void authenticateUser(LoginDto loginDto){
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                 loginDto.getEmail(), loginDto.getPassword());
 
         authenticationManager.authenticate(authToken);
+    }
 
-        UserEntity user = this.userRepo.findByEmail(loginDto.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-
+    private void setJwtAuthenticationDto(UserEntity user) {
         String jwt = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
-
-        return JwtAuthenticationDto.builder()
+        this.jwtAuthenticationDto = JwtAuthenticationDto
+                .builder()
                 .token(jwt).refreshToken(refreshToken)
                 .build();
     }

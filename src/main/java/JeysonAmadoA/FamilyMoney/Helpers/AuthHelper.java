@@ -25,4 +25,12 @@ public class AuthHelper {
         else return null;
     }
 
+    public static UserDto getUserAuthenticated(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null){
+            return (UserDto) authentication.getCredentials();
+        }
+        else return null;
+    }
+
 }

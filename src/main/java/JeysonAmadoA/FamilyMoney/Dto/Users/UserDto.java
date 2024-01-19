@@ -1,5 +1,6 @@
 package JeysonAmadoA.FamilyMoney.Dto.Users;
 
+import JeysonAmadoA.FamilyMoney.Utilities.Security.Role;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -16,4 +17,6 @@ public class UserDto {
     private LocalDate birthDay;
 
     private String email;
+
+    private Role role;
 }

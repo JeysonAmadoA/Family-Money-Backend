@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 import static JeysonAmadoA.FamilyMoney.Helpers.AuthHelper.verifyRegisterPasswords;
 
 @RestController
@@ -43,12 +41,13 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         try {
-            JwtAuthenticationDto jwtAuthentication = authService.loginUser(loginDto);
+            UserDto userLogged = authService.loginUser(loginDto);
+            JwtAuthenticationDto jwtAuthentication = authService.getJwtAuthenticationDto();
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", jwtAuthentication.getToken());
             return ResponseEntity.status(HttpStatus.OK)
                     .headers(headers)
-                    .body(Map.of("message", "Inicio de sesión exitoso"));
+                    .body(userLogged);
 
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

@@ -10,5 +10,7 @@ public interface AuthServiceInterface {
 
     UserDto registerUser(RegisterUserDto registerUserDto) throws RegisterUserException;
 
-    JwtAuthenticationDto loginUser(LoginDto loginDto);
+    UserDto loginUser(LoginDto loginDto);
+
+    JwtAuthenticationDto getJwtAuthenticationDto();
 }
