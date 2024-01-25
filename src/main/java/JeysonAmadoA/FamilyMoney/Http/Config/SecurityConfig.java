@@ -50,7 +50,9 @@ public class SecurityConfig {
                     auth.requestMatchers(antMatcher( "/users/update/password/{id}")).hasAuthority(Permission.UPDATE_USERS.name());
                     auth.requestMatchers(antMatcher( "/users/delete/{id}")).hasAuthority(Permission.DELETE_USERS.name());
                     auth.requestMatchers(antMatcher( "/family-group/**")).hasAuthority(Permission.FAMILY_GROUPS_MANAGEMENT.name());
-
+                    auth.requestMatchers(antMatcher( "/period/**")).hasAuthority(Permission.FAMILY_GROUPS_MANAGEMENT.name());
+                    auth.requestMatchers(antMatcher( "/budget/**")).hasAuthority(Permission.FAMILY_GROUPS_MANAGEMENT.name());
+                    auth.requestMatchers(antMatcher( "/payment/**")).hasAuthority(Permission.FAMILY_GROUPS_MANAGEMENT.name());
                     auth.anyRequest().authenticated();
 
                 });

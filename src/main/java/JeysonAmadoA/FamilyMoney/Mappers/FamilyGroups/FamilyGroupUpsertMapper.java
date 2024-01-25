@@ -20,6 +20,18 @@ public class FamilyGroupUpsertMapper extends BaseMapper<FamilyGroupUpsertDto, Fa
         this.typeService = typeService;
     }
 
+    @Override
+    public FamilyGroupEntity toEntity(FamilyGroupUpsertDto dto) {
+        return FamilyGroupEntity.builder()
+                .groupName(dto.getGroupName())
+                .familyGroupTypeId(dto.getFamilyGroupTypeId())
+                .membersQuantity(dto.getMembersQuantity())
+                .familyGroupTotalMoney(dto.getFamilyGroupTotalMoney())
+                .familyGroupType(typeService.filterById(dto.getFamilyGroupTypeId()))
+                .build();
+    }
+
+
     public FamilyGroupEntity update(FamilyGroupUpsertDto familyGroupDto, FamilyGroupEntity familyGroupEntity) throws GetException {
         updateFieldIfNumberNotZero(familyGroupDto.getMembersQuantity(), familyGroupEntity::setMembersQuantity);
         updateFieldIfNumberNotZero(familyGroupDto.getFamilyGroupTotalMoney(), familyGroupEntity::setFamilyGroupTotalMoney);

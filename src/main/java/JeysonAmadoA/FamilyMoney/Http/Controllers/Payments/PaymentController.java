@@ -1,19 +1,21 @@
-package JeysonAmadoA.FamilyMoney.Http.Controllers.Members;
+package JeysonAmadoA.FamilyMoney.Http.Controllers.Payments;
 
 import JeysonAmadoA.FamilyMoney.Dto.Payments.PaymentDto;
 import JeysonAmadoA.FamilyMoney.Dto.Payments.PaymentUpsertDto;
-import JeysonAmadoA.FamilyMoney.Interfaces.Services.Members.MemberPaymentServiceInterface;
+import JeysonAmadoA.FamilyMoney.Exceptions.General.DataIncompleteException;
+import JeysonAmadoA.FamilyMoney.Exceptions.General.NotFoundException;
+import JeysonAmadoA.FamilyMoney.Interfaces.Services.Payments.PaymentServiceInterface;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/payment")
-public class MemberPaymentController {
+public class PaymentController {
 
-    private final MemberPaymentServiceInterface paymentService;
+    private final PaymentServiceInterface paymentService;
 
-    public MemberPaymentController(MemberPaymentServiceInterface paymentService) {
+    public PaymentController(PaymentServiceInterface paymentService) {
         this.paymentService = paymentService;
     }
 
@@ -22,8 +24,10 @@ public class MemberPaymentController {
         try{
             PaymentDto savedPayment = paymentService.storePayment(paymentUpsertDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedPayment);
-        } catch (Exception exception) {
+        } catch (DataIncompleteException exception) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
         }
     }
 
@@ -31,9 +35,9 @@ public class MemberPaymentController {
     public ResponseEntity<?> getPayment(@PathVariable Long paymentId){
         try {
             PaymentDto payment = paymentService.getById(paymentId);
-            return payment != null ? ResponseEntity.status(HttpStatus.OK).body(payment)
-                    :ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gasto no encontrado");
-
+            return ResponseEntity.status(HttpStatus.OK).body(payment);
+        } catch (NotFoundException exception){
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         } catch (Exception exception) {
             return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
         }
@@ -43,9 +47,9 @@ public class MemberPaymentController {
     public ResponseEntity<?> update(@PathVariable Long paymentId, @RequestBody PaymentUpsertDto paymentUpsertDto){
         try {
             PaymentDto updatedFamilyPayment = paymentService.updatePayment(paymentId, paymentUpsertDto);
-            return updatedFamilyPayment != null ? ResponseEntity.status(HttpStatus.OK).body(updatedFamilyPayment)
-                    :ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gasto no encontrado");
-
+            return ResponseEntity.status(HttpStatus.OK).body(updatedFamilyPayment);
+        } catch (NotFoundException exception){
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         } catch (Exception exception) {
             return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
         }
@@ -54,10 +58,10 @@ public class MemberPaymentController {
     @DeleteMapping("delete/{paymentId}")
     public ResponseEntity<?> delete(@PathVariable Long paymentId){
         try {
-            boolean isDeleted = paymentService.deletePayment(paymentId);
-            return isDeleted ? ResponseEntity.status(HttpStatus.OK).body("Gasto eliminado")
-                    : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Gasto no encontrado");
-
+            paymentService.deletePayment(paymentId);
+            return ResponseEntity.status(HttpStatus.OK).body("Pago eliminado");
+        } catch (NotFoundException exception){
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
         } catch (Exception exception) {
             return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
         }

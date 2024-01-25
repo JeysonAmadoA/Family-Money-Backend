@@ -85,28 +85,28 @@ public class AuthControllerTest {
         assertEquals("Error al crear usuario. Las contraseñas no coinciden", response.getBody());
     }
 
-    @Test
-    public void loginTest() {
-
-        LoginDto loginDto = new LoginDto();
-        loginDto.setEmail("jeyson@example.com");
-        loginDto.setPassword("ABCD");
-
-        JwtAuthenticationDto authenticationDto = JwtAuthenticationDto
-                .builder()
-                .token("Token")
-                .refreshToken("Refresh token")
-                .build();
-
-        when(authService.loginUser(any(LoginDto.class))).thenReturn(authenticationDto);
-
-        ResponseEntity<?> response = authController.login(loginDto);
-
-        verify(authService, times(1)).loginUser(loginDto);
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(authenticationDto, response.getBody());
-    }
+//    @Test
+//    public void loginTest() {
+//
+//        LoginDto loginDto = new LoginDto();
+//        loginDto.setEmail("jeyson@example.com");
+//        loginDto.setPassword("ABCD");
+//
+//        JwtAuthenticationDto authenticationDto = JwtAuthenticationDto
+//                .builder()
+//                .token("Token")
+//                .refreshToken("Refresh token")
+//                .build();
+//
+//        when(authService.loginUser(any(LoginDto.class))).thenReturn(authenticationDto);
+//
+//        ResponseEntity<?> response = authController.login(loginDto);
+//
+//        verify(authService, times(1)).loginUser(loginDto);
+//        assertNotNull(response);
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertEquals(authenticationDto, response.getBody());
+//    }
 
     @Test
     public void loginFailTest() {

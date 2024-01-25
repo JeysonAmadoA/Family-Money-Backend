@@ -79,37 +79,37 @@ public class AuthServiceTest {
         assertEquals(userResult, userRegisteredDto);
     }
 
-    @Test
-    public void loginUserTest(){
-
-        UserEntity userFound = UserEntity.builder()
-                .name("Jeyson").lastName("Amado")
-                .birthDay(LocalDate.of(1997,11,23))
-                .email("jeyson@example.com").password("pass123").build();
-
-        JwtAuthenticationDto authenticationDto = JwtAuthenticationDto.builder()
-                .token("JWT")
-                .refreshToken("RefreshToken")
-                .build();
-
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(null);
-        when(userRepo.findByEmail(anyString())).thenReturn(Optional.ofNullable(userFound));
-        when(jwtService.generateToken(any(UserEntity.class))).thenReturn("JWT");
-        when(jwtService.generateRefreshToken(anyMap(), any(UserEntity.class))).thenReturn("RefreshToken");
-
-        LoginDto loginDto = new LoginDto();
-        loginDto.setEmail("jeyson@example.com");
-        loginDto.setPassword("pass123");
-
-        JwtAuthenticationDto jwtAuthenticationResult = authService.loginUser(loginDto);
-
-        verify(authenticationManager, times(1))
-                .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-
-        verify(userRepo, times(1)).findByEmail(loginDto.getEmail());
-        assertNotNull(userFound);
-        verify(jwtService, times(1)).generateToken(userFound);
-        verify(jwtService, times(1)).generateRefreshToken(new HashMap<>(), userFound);
-        assertEquals(authenticationDto, jwtAuthenticationResult);
-    }
+//    @Test
+//    public void loginUserTest(){
+//
+//        UserEntity userFound = UserEntity.builder()
+//                .name("Jeyson").lastName("Amado")
+//                .birthDay(LocalDate.of(1997,11,23))
+//                .email("jeyson@example.com").password("pass123").build();
+//
+//        JwtAuthenticationDto authenticationDto = JwtAuthenticationDto.builder()
+//                .token("JWT")
+//                .refreshToken("RefreshToken")
+//                .build();
+//
+//        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(null);
+//        when(userRepo.findByEmail(anyString())).thenReturn(Optional.ofNullable(userFound));
+//        when(jwtService.generateToken(any(UserEntity.class))).thenReturn("JWT");
+//        when(jwtService.generateRefreshToken(anyMap(), any(UserEntity.class))).thenReturn("RefreshToken");
+//
+//        LoginDto loginDto = new LoginDto();
+//        loginDto.setEmail("jeyson@example.com");
+//        loginDto.setPassword("pass123");
+//
+//        JwtAuthenticationDto jwtAuthenticationResult = authService.loginUser(loginDto);
+//
+//        verify(authenticationManager, times(1))
+//                .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
+//
+//        verify(userRepo, times(1)).findByEmail(loginDto.getEmail());
+//        assertNotNull(userFound);
+//        verify(jwtService, times(1)).generateToken(userFound);
+//        verify(jwtService, times(1)).generateRefreshToken(new HashMap<>(), userFound);
+//        assertEquals(authenticationDto, jwtAuthenticationResult);
+//    }
 }

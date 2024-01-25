@@ -1,8 +1,9 @@
 package JeysonAmadoA.FamilyMoney.Dto.FamilyGroups;
 
+import JeysonAmadoA.FamilyMoney.Dto.Members.MemberDto;
 import lombok.Data;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class FamilyGroupDto {
@@ -16,5 +17,7 @@ public class FamilyGroupDto {
     private FamilyGroupTypeDto familyGroupType;
 
     private float familyGroupTotalMoney;
+
+    private List<MemberDto> members;
 
 }

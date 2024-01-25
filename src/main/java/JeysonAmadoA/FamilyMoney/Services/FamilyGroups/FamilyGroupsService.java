@@ -4,6 +4,7 @@ import JeysonAmadoA.FamilyMoney.Dto.FamilyGroups.FamilyGroupDto;
 import JeysonAmadoA.FamilyMoney.Dto.FamilyGroups.FamilyGroupUpsertDto;
 import JeysonAmadoA.FamilyMoney.Dto.Members.MemberDto;
 import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.FamilyGroupEntity;
+import JeysonAmadoA.FamilyMoney.Entities.Members.MemberEntity;
 import JeysonAmadoA.FamilyMoney.Entities.Users.UserEntity;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.DeleteException;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.GetException;
@@ -38,14 +39,17 @@ public class FamilyGroupsService implements FamilyGroupsServiceInterface {
 
     private final FamilyGroupUpsertMapper upsertMapper;
 
+    private final MemberMapper memberMapper;
+
     public FamilyGroupsService(UserRepository userRepo,
                                FamilyGroupRepository familyGroupRepo,
                                FamilyGroupMapper familyGroupMapper,
-                               FamilyGroupUpsertMapper upsertMapper) {
+                               FamilyGroupUpsertMapper upsertMapper, MemberMapper memberMapper) {
         this.userRepo = userRepo;
         this.familyGroupRepo = familyGroupRepo;
         this.familyGroupMapper = familyGroupMapper;
         this.upsertMapper = upsertMapper;
+        this.memberMapper = memberMapper;
     }
 
     @Transactional
@@ -110,7 +114,6 @@ public class FamilyGroupsService implements FamilyGroupsServiceInterface {
             FamilyGroupEntity familyGroup = familyGroupRepo.findById(familyGroupId)
                     .orElseThrow(() -> new EntityNotFoundException("No se encontró el grupo familiar"));
 
-            MemberMapper memberMapper = new MemberMapper();
             return familyGroup.getMembers().stream()
                     .map(memberMapper::toDto)
                     .collect(Collectors.toList());
@@ -152,7 +155,18 @@ public class FamilyGroupsService implements FamilyGroupsServiceInterface {
     }
 
     @Override
-    public FamilyGroupEntity filterById(Long id) {
-        return familyGroupRepo.findById(id).orElse(null);
+    public FamilyGroupEntity filterById(Long id) throws GetException {
+        return familyGroupRepo.findById(id).orElseThrow(() -> new GetException("Grupo familiar no encontrado"));
     }
+
+    @Override
+    public FamilyGroupEntity updateTotalMoney(Long id, float moneyAmount) throws GetException {
+        FamilyGroupEntity familyGroup = filterById(id);
+        familyGroup.sumFamilyGroupMoney(moneyAmount)
+                .commitUpdate(getUserWhoActingId());
+
+        return familyGroupRepo.save(familyGroup);
+    }
+
+
 }

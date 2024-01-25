@@ -8,6 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -38,5 +39,11 @@ public class PeriodEntity extends BaseEntity {
     @NotNull(message = "Debe ingresar una fecha final")
     @Column(name = "end_date", columnDefinition = "DATE")
     private LocalDate endDate;
+
+    @OneToMany(mappedBy = "period")
+    private Set<BudgetEntity> budgets;
+
+    @OneToMany(mappedBy = "period")
+    private Set<ExpenseEntity> expenses;
 
 }

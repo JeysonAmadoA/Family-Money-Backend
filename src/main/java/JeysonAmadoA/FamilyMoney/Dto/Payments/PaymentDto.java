@@ -10,14 +10,14 @@ public class PaymentDto {
 
     private Long id;
 
-//    private MemberDto member;
+    private MemberDto member;
 
     private float amount;
 
     private String observations;
 
-//    private ExpenseDto expense;
+    private ExpenseDto expense;
 
-//    private BudgetDto budget;
+    private BudgetDto budget;
 
 }

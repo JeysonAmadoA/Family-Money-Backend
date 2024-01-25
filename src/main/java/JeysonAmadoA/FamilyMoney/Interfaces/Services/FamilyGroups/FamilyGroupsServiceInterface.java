@@ -25,5 +25,9 @@ public interface FamilyGroupsServiceInterface {
 
     boolean deleteFamilyGroup(Long id) throws DeleteException;
 
-    FamilyGroupEntity filterById(Long id);
+    FamilyGroupEntity filterById(Long id) throws GetException;
+
+    FamilyGroupEntity updateTotalMoney(Long id, float moneyAmount) throws GetException;
+
+
 }

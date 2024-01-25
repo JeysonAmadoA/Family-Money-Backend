@@ -1,36 +1,36 @@
-package JeysonAmadoA.FamilyMoney.Entities.Members;
+package JeysonAmadoA.FamilyMoney.Entities.FamilyGroups;
 
 import JeysonAmadoA.FamilyMoney.Entities.BaseEntity;
-import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.BudgetEntity;
-import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.ExpenseEntity;
+import JeysonAmadoA.FamilyMoney.Entities.Members.MemberEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.Where;
+
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Where(clause = "deleted_at is NULL")
-@Table(name = "members_payment")
+@Table(name = "payments")
 @Getter
 @Setter
-public class MemberPaymentEntity extends BaseEntity {
+public class PaymentEntity extends BaseEntity {
 
-    @NotNull(message = "Debe ingresar un tipo de grupo")
+    @Column(name = "amount")
+    private float amount;
+
+    @Column(name = "observations")
+    private String observations;
+
+    @NotNull(message = "Debe ingresar un miembro")
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
     @ManyToOne
     @JoinColumn(name = "member_id", referencedColumnName = "id", insertable = false, updatable = false)
     private MemberEntity member;
-
-    @Column(nullable = false)
-    private float amount;
-
-    @Column
-    private String observations;
 
     @Column(name = "expense_id")
     private Long expenseId;

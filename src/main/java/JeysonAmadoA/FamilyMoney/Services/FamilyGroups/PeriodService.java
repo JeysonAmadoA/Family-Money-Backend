@@ -15,6 +15,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import static JeysonAmadoA.FamilyMoney.Helpers.AuthHelper.getUserWhoActingId;
 
 @Service
@@ -54,6 +58,16 @@ public class PeriodService implements PeriodServiceInterface {
         } catch (Exception e){
             throw new GetException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<PeriodDto> filterByGroupId(Long id) throws GetException {
+        Optional<List<PeriodEntity>> foundPeriod = periodRepo.findByFamilyGroupId(id);
+        List<PeriodEntity> periods = foundPeriod.orElseThrow(() -> new GetException("No se encontraron periodos"));
+
+        return periods.stream()
+                .map(periodMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional

@@ -7,6 +7,7 @@ import JeysonAmadoA.FamilyMoney.Exceptions.General.DeleteException;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.GetException;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.StoreException;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.UpdateException;
+import JeysonAmadoA.FamilyMoney.Interfaces.Services.FamilyGroups.FamilyGroupsServiceInterface;
 import JeysonAmadoA.FamilyMoney.Interfaces.Services.Members.MemberServiceInterface;
 import JeysonAmadoA.FamilyMoney.Mappers.Members.MemberMapper;
 import JeysonAmadoA.FamilyMoney.Mappers.Members.MemberUpsertMapper;
@@ -26,13 +27,16 @@ public class MemberService implements MemberServiceInterface {
 
     private final MemberUpsertMapper upsertMapper;
 
+    private final FamilyGroupsServiceInterface groupsServiceInterface;
+
     @Autowired
     public MemberService(MemberRepository memberRepo,
                          MemberMapper memberMapper,
-                         MemberUpsertMapper upsertMapper) {
+                         MemberUpsertMapper upsertMapper, FamilyGroupsServiceInterface groupsServiceInterface) {
         this.memberRepo = memberRepo;
         this.memberMapper = memberMapper;
         this.upsertMapper = upsertMapper;
+        this.groupsServiceInterface = groupsServiceInterface;
     }
 
     @Transactional
@@ -42,6 +46,9 @@ public class MemberService implements MemberServiceInterface {
             MemberEntity newMember = upsertMapper.toEntity(memberUpsertDto);
             newMember.commitCreate(getUserWhoActingId());
             MemberEntity storedMember = memberRepo.save(newMember);
+            groupsServiceInterface.updateTotalMoney(memberUpsertDto.getFamilyGroupId(),
+                                                    memberUpsertDto.getEconomicContribution());
+
             return memberMapper.toDto(storedMember);
         } catch (Exception e){
             throw new StoreException(e.getMessage());
