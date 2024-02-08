@@ -27,7 +27,7 @@ public class JWTService implements JWTServiceInterface {
                 .setClaims(generateExtraClaims(user))
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1)))
+                .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(20)))
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
