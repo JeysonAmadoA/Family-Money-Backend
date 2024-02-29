@@ -6,12 +6,13 @@ import JeysonAmadoA.FamilyMoney.Exceptions.General.DeleteException;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.GetException;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.StoreException;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.UpdateException;
+import JeysonAmadoA.FamilyMoney.Exceptions.Members.RegisterMembersException;
 
 import java.util.List;
 
 public interface MemberServiceInterface {
 
-    MemberDto storeMember(MemberUpsertDto memberUpsertDto) throws StoreException;
+    MemberDto storeMember(MemberUpsertDto memberUpsertDto) throws StoreException, GetException, RegisterMembersException;
 
     MemberDto getById(Long id) throws GetException;
 

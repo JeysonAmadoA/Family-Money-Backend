@@ -30,6 +30,7 @@ public class PeriodMapper extends BaseMapper<PeriodDto, PeriodEntity> {
         periodDto.setPeriodName(entity.getPeriodName());
         periodDto.setStartDate(entity.getStartDate());
         periodDto.setEndDate(entity.getEndDate());
+        periodDto.setFamilyGroupId(entity.getFamilyGroupId());
         if (entity.getBudgets() != null){
             List<BudgetDto> budgetsDto = entity.getBudgets().stream().map(budgetMapper::toDto).toList();
             periodDto.setBudgets(budgetsDto);

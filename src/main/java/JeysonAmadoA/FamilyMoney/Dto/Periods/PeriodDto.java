@@ -14,6 +14,8 @@ public class PeriodDto {
 
     private String periodName;
 
+    private Long familyGroupId;
+
     private LocalDate startDate;
 
     private LocalDate endDate;

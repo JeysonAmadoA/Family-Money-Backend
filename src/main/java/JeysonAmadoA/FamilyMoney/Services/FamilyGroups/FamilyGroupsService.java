@@ -160,13 +160,20 @@ public class FamilyGroupsService implements FamilyGroupsServiceInterface {
     }
 
     @Override
-    public FamilyGroupEntity updateTotalMoney(Long id, float moneyAmount) throws GetException {
+    public boolean updateTotalMoney(Long id) throws GetException, UpdateException {
         FamilyGroupEntity familyGroup = filterById(id);
-        familyGroup.sumFamilyGroupMoney(moneyAmount)
-                .commitUpdate(getUserWhoActingId());
-
-        return familyGroupRepo.save(familyGroup);
+        familyGroup.sumFamilyGroupMoney().commitUpdate(getUserWhoActingId());
+        try {
+            familyGroupRepo.save(familyGroup);
+            return true;
+        } catch (Exception exception){
+            throw new UpdateException(exception.getMessage());
+        }
     }
 
+    public int getFamilyGroupQuantityById(Long id) throws GetException {
+        FamilyGroupEntity familyGroup = filterById(id);
+        return familyGroup.getMembersQuantity();
+    }
 
 }

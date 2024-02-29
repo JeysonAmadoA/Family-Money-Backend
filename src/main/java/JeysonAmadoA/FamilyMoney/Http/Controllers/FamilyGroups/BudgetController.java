@@ -2,6 +2,7 @@ package JeysonAmadoA.FamilyMoney.Http.Controllers.FamilyGroups;
 
 import JeysonAmadoA.FamilyMoney.Dto.Budgets.BudgetDto;
 import JeysonAmadoA.FamilyMoney.Dto.Budgets.BudgetUpsertDto;
+import JeysonAmadoA.FamilyMoney.Exceptions.Budgets.RegisterBudgetException;
 import JeysonAmadoA.FamilyMoney.Interfaces.Services.FamilyGroups.BudgetServiceInterface;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,10 @@ public class BudgetController {
         try{
             BudgetDto savedBudget = budgetService.storeBudget(budgetUpsertDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedBudget);
-        } catch (Exception exception) {
+        } catch (RegisterBudgetException exception) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
         }
     }
 

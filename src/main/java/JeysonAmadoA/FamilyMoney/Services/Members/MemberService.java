@@ -7,6 +7,7 @@ import JeysonAmadoA.FamilyMoney.Exceptions.General.DeleteException;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.GetException;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.StoreException;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.UpdateException;
+import JeysonAmadoA.FamilyMoney.Exceptions.Members.RegisterMembersException;
 import JeysonAmadoA.FamilyMoney.Interfaces.Services.FamilyGroups.FamilyGroupsServiceInterface;
 import JeysonAmadoA.FamilyMoney.Interfaces.Services.Members.MemberServiceInterface;
 import JeysonAmadoA.FamilyMoney.Mappers.Members.MemberMapper;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static JeysonAmadoA.FamilyMoney.Helpers.AuthHelper.getUserWhoActingId;
+import static JeysonAmadoA.FamilyMoney.Helpers.MembersHelper.verifyMembersIsComplete;
 
 @Service
 public class MemberService implements MemberServiceInterface {
@@ -27,7 +29,7 @@ public class MemberService implements MemberServiceInterface {
 
     private final MemberUpsertMapper upsertMapper;
 
-    private final FamilyGroupsServiceInterface groupsServiceInterface;
+    private final FamilyGroupsServiceInterface groupsService;
 
     @Autowired
     public MemberService(MemberRepository memberRepo,
@@ -36,19 +38,19 @@ public class MemberService implements MemberServiceInterface {
         this.memberRepo = memberRepo;
         this.memberMapper = memberMapper;
         this.upsertMapper = upsertMapper;
-        this.groupsServiceInterface = groupsServiceInterface;
+        this.groupsService = groupsServiceInterface;
     }
 
     @Transactional
     @Override
-    public MemberDto storeMember(MemberUpsertDto memberUpsertDto) throws StoreException {
+    public MemberDto storeMember(MemberUpsertDto memberUpsertDto) throws StoreException, GetException, RegisterMembersException {
+        int countMembersInGroup = memberRepo.countByFamilyGroupId(memberUpsertDto.getFamilyGroupId());
+        int membersQuantityAllowed = groupsService.getFamilyGroupQuantityById(memberUpsertDto.getFamilyGroupId());
+        verifyMembersIsComplete(countMembersInGroup, membersQuantityAllowed);
         try {
             MemberEntity newMember = upsertMapper.toEntity(memberUpsertDto);
             newMember.commitCreate(getUserWhoActingId());
             MemberEntity storedMember = memberRepo.save(newMember);
-            groupsServiceInterface.updateTotalMoney(memberUpsertDto.getFamilyGroupId(),
-                                                    memberUpsertDto.getEconomicContribution());
-
             return memberMapper.toDto(storedMember);
         } catch (Exception e){
             throw new StoreException(e.getMessage());

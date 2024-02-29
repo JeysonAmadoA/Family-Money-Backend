@@ -3,6 +3,8 @@ package JeysonAmadoA.FamilyMoney.Http.Controllers.FamilyGroups;
 import JeysonAmadoA.FamilyMoney.Dto.FamilyGroups.FamilyGroupDto;
 import JeysonAmadoA.FamilyMoney.Dto.FamilyGroups.FamilyGroupUpsertDto;
 import JeysonAmadoA.FamilyMoney.Dto.Members.MemberDto;
+import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.FamilyGroupEntity;
+import JeysonAmadoA.FamilyMoney.Exceptions.General.GetException;
 import JeysonAmadoA.FamilyMoney.Interfaces.Services.FamilyGroups.FamilyGroupsServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -66,6 +68,18 @@ public class FamilyGroupController {
         }
     }
 
+    @PatchMapping("update/money/{groupId}")
+    public ResponseEntity<?> updateTotalMoney(@PathVariable Long groupId){
+        try {
+            familyGroupsService.updateTotalMoney(groupId);
+            return ResponseEntity.status(HttpStatus.OK).body("Dinero total actualizado");
+        } catch (GetException exception) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
+        }
+    }
+
     @DeleteMapping("delete/{groupId}")
     public ResponseEntity<?> delete(@PathVariable Long groupId){
         try {
@@ -78,6 +92,5 @@ public class FamilyGroupController {
             return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
         }
     }
-
 
 }

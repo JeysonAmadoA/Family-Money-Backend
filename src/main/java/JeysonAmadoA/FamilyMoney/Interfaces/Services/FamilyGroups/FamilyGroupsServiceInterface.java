@@ -27,7 +27,8 @@ public interface FamilyGroupsServiceInterface {
 
     FamilyGroupEntity filterById(Long id) throws GetException;
 
-    FamilyGroupEntity updateTotalMoney(Long id, float moneyAmount) throws GetException;
+    boolean updateTotalMoney(Long id) throws GetException, UpdateException;
 
+    int getFamilyGroupQuantityById(Long id) throws GetException;
 
 }

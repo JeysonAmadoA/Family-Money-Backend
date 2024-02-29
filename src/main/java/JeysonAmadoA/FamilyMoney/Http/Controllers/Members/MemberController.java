@@ -2,6 +2,8 @@ package JeysonAmadoA.FamilyMoney.Http.Controllers.Members;
 
 import JeysonAmadoA.FamilyMoney.Dto.Members.MemberDto;
 import JeysonAmadoA.FamilyMoney.Dto.Members.MemberUpsertDto;
+import JeysonAmadoA.FamilyMoney.Exceptions.General.GetException;
+import JeysonAmadoA.FamilyMoney.Exceptions.Members.RegisterMembersException;
 import JeysonAmadoA.FamilyMoney.Interfaces.Services.Members.MemberServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,8 +26,10 @@ public class MemberController {
         try{
             MemberDto savedMember = memberService.storeMember(memberUpsertDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedMember);
-        } catch (Exception exception) {
+        } catch (GetException | RegisterMembersException exception) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        }catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
         }
     }
 

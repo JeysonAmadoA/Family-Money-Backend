@@ -46,4 +46,10 @@ public class PeriodEntity extends BaseEntity {
     @OneToMany(mappedBy = "period")
     private Set<ExpenseEntity> expenses;
 
+    public double getTotalPercentage(){
+        return budgets.stream()
+                .mapToDouble(BudgetEntity::getPercentage)
+                .sum();
+    }
+
 }

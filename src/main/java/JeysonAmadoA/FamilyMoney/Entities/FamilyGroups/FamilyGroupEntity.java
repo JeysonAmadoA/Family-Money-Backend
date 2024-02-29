@@ -50,8 +50,12 @@ public class FamilyGroupEntity extends BaseEntity {
     @OneToMany(mappedBy = "familyGroup")
     private Set<MemberEntity> members;
 
-    public FamilyGroupEntity sumFamilyGroupMoney(float moneyAmount){
-        setFamilyGroupTotalMoney(getFamilyGroupTotalMoney() + moneyAmount);
+    public FamilyGroupEntity sumFamilyGroupMoney(){
+        float sumTotalMoney = (float) members.stream()
+                .mapToDouble(MemberEntity::getEconomicContribution)
+                .sum();
+
+        setFamilyGroupTotalMoney(sumTotalMoney);
         return this;
     }
 

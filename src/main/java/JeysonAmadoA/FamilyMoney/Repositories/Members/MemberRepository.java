@@ -4,4 +4,6 @@ import JeysonAmadoA.FamilyMoney.Entities.Members.MemberEntity;
 import JeysonAmadoA.FamilyMoney.Repositories.BaseRepository;
 
 public interface MemberRepository extends BaseRepository<MemberEntity, Long> {
+
+    int countByFamilyGroupId(Long familyGroupId);
 }

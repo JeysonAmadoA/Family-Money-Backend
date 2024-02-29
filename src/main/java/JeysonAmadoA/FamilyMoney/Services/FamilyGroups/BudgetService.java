@@ -3,6 +3,7 @@ package JeysonAmadoA.FamilyMoney.Services.FamilyGroups;
 import JeysonAmadoA.FamilyMoney.Dto.Budgets.BudgetDto;
 import JeysonAmadoA.FamilyMoney.Dto.Budgets.BudgetUpsertDto;
 import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.BudgetEntity;
+import JeysonAmadoA.FamilyMoney.Exceptions.Budgets.RegisterBudgetException;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.*;
 import JeysonAmadoA.FamilyMoney.Interfaces.Services.FamilyGroups.BudgetServiceInterface;
 import JeysonAmadoA.FamilyMoney.Mappers.Budgets.BudgetUpsertMapper;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static JeysonAmadoA.FamilyMoney.Helpers.AuthHelper.getUserWhoActingId;
+import static JeysonAmadoA.FamilyMoney.Helpers.BudgetHelper.verifyPercentage;
 
 @Service
 public class BudgetService implements BudgetServiceInterface {
@@ -32,13 +34,15 @@ public class BudgetService implements BudgetServiceInterface {
 
     @Transactional
     @Override
-    public BudgetDto storeBudget(BudgetUpsertDto budgetUpsertDto) throws StoreException {
+    public BudgetDto storeBudget(BudgetUpsertDto budgetUpsertDto) throws StoreException, RegisterBudgetException {
+        float totalPercentage = budgetRepo.getTotalPercentageByPeriodId(budgetUpsertDto.getPeriodId()).orElse((float) 0);
+        verifyPercentage(budgetUpsertDto.getPercentage(), totalPercentage);
         try {
             BudgetEntity newBudget = upsertMapper.toEntity(budgetUpsertDto);
             newBudget.commitCreate(getUserWhoActingId());
             BudgetEntity storedBudget = budgetRepo.save(newBudget);
             return budgetMapper.toDto(storedBudget);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new StoreException(e.getMessage());
         }
     }

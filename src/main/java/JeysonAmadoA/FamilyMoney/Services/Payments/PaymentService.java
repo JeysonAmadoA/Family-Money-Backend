@@ -2,6 +2,7 @@ package JeysonAmadoA.FamilyMoney.Services.Payments;
 
 import JeysonAmadoA.FamilyMoney.Dto.Payments.PaymentDto;
 import JeysonAmadoA.FamilyMoney.Dto.Payments.PaymentUpsertDto;
+import JeysonAmadoA.FamilyMoney.Dto.Payments.PaymentsFromGroupDto;
 import JeysonAmadoA.FamilyMoney.Entities.FamilyGroups.PaymentEntity;
 import JeysonAmadoA.FamilyMoney.Exceptions.General.*;
 import JeysonAmadoA.FamilyMoney.Interfaces.Services.Payments.PaymentServiceInterface;
@@ -9,6 +10,8 @@ import JeysonAmadoA.FamilyMoney.Mappers.Payments.PaymentMapper;
 import JeysonAmadoA.FamilyMoney.Repositories.FamilyGroups.PaymentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static JeysonAmadoA.FamilyMoney.Helpers.AuthHelper.getUserWhoActingId;
 import static JeysonAmadoA.FamilyMoney.Helpers.ValidatorHelper.validateNotNulls;
@@ -77,4 +80,15 @@ public class PaymentService implements PaymentServiceInterface {
         String[] excludedFields = {"expenseId","budgetId"};
         validateNotNulls(paymentUpsertDto, excludedFields);
     }
+
+    @Override
+    public List<PaymentsFromGroupDto> getPaymentsFromGroup(Long groupId) throws GetException {
+        try {
+            return paymentRepo.findPaymentsByFamilyGroupId(groupId);
+        } catch (Exception e){
+            throw new GetException(e.getMessage());
+        }
+    }
+
+
 }
